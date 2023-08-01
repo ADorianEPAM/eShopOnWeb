@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MinimalApi.Endpoint.Configurations.Extensions;
@@ -81,6 +82,7 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Configuration.AddEnvironmentVariables();
@@ -122,6 +124,8 @@ builder.Services.AddSwaggerGen(c =>
             });
 });
 
+
+builder.Logging.AddFilter<ApplicationInsightsLoggerProvider>("cloudx", LogLevel.Trace);
 var app = builder.Build();
 
 app.Logger.LogInformation("PublicApi App created...");
@@ -176,6 +180,8 @@ app.MapControllers();
 app.MapEndpoints();
 
 app.Logger.LogInformation("LAUNCHING PublicApi");
+
+//throw new Exception("Cannot move further");
 app.Run();
 
 public partial class Program { }
