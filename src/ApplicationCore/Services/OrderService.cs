@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
@@ -6,6 +8,7 @@ using Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate;
 using Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Specifications;
+using Newtonsoft.Json;
 
 namespace Microsoft.eShopWeb.ApplicationCore.Services;
 
@@ -45,6 +48,11 @@ public class OrderService : IOrderService
             var orderItem = new OrderItem(itemOrdered, basketItem.UnitPrice, basketItem.Quantity);
             return orderItem;
         }).ToList();
+
+        //using var client = new HttpClient();
+        //var data = basket.Items.Select(x => new WarehouseOrderInfo(x.CatalogItemId, x.Quantity));
+        //var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+        //var response = await client.PostAsync(WarehouseConnection.AddOrderUrl, content);
 
         var order = new Order(basket.BuyerId, shippingAddress, items);
 
